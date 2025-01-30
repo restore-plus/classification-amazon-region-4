@@ -90,7 +90,7 @@ for (cube_year in cube_years) {
     period      = cube_temporal_composition,
     res         = 30,
     multicores  = multicores,
-    output_dir  = cube_dir,
+    output_dir  = cube_dir_year,
     grid_system = "BDC_MD_V2"
   )
 }
