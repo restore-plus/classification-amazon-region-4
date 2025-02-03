@@ -10,7 +10,7 @@ library(dplyr)
 #
 
 # Cube dates
-cube_years <- 2014:2020
+classification_years <- 2020:2014
 
 # Cube directory
 cube_base_dir <- "data/derived/cube"
