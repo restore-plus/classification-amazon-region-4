@@ -6,7 +6,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-Classification using Landsat-8 (1996, 2014 - 2020) for Region 4 defined
+Classification using Landsat-8 (1996, 2014 - 2021) for Region 4 defined
 in the scope of the Restore+ Project.
 
 ## Getting started
