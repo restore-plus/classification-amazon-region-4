@@ -14,7 +14,7 @@ using \code{fs::path()}.
 This function retrieves the directory path where cube is stored.
 }
 \details{
-It first checks for an environment variable (\code{RESTORE_PLUS_REG4_DIR})
+It first checks for an environment variable (\code{RESTORE_PLUS_REG4_HLS_DIR})
 and falls back to a default directory (\code{data/derived/cubes}) if the
 environment variable is not set. The function uses \code{fs::path()} to
 ensure proper path construction across different operating systems.

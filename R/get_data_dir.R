@@ -2,7 +2,7 @@
 #'
 #' This function retrieves the directory path where cube is stored.
 #'
-#' It first checks for an environment variable (`RESTORE_PLUS_REG4_DIR`)
+#' It first checks for an environment variable (`RESTORE_PLUS_REG4_HLS_DIR`)
 #' and falls back to a default directory (`data/derived/cubes`) if the
 #' environment variable is not set. The function uses `fs::path()` to
 #' ensure proper path construction across different operating systems.

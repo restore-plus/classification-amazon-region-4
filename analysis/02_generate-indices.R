@@ -4,6 +4,7 @@ library(sf)
 library(fs)
 library(sits)
 library(dplyr)
+library(classificationamazonregion4)
 
 #
 # Cube definitions
