@@ -19,7 +19,7 @@ earthdatalogin::edl_netrc(
 #
 
 # Cube dates
-cube_years <- c(2020:2016)
+cube_years <- c(2021:2016)
 
 # Temporal composition
 cube_temporal_composition <- "P3M"
