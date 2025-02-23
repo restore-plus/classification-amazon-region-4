@@ -10,7 +10,7 @@ library(dplyr)
 #
 
 # Cube dates
-classification_years <- c(2020:2016)
+classification_years <- c(2021:2016)
 
 # Cube directory
 cube_base_dir <- get_cubes_dir()
