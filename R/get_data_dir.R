@@ -13,5 +13,5 @@
 get_cubes_dir <- function() {
   default_dir <- "data/derived/cube"
 
-  fs::path(Sys.getenv("RESTORE_PLUS_REG4_DIR", default_dir))
+  fs::path(Sys.getenv("RESTORE_PLUS_REG4_HLS_DIR", default_dir))
 }
