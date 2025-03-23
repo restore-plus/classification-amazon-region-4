@@ -11,7 +11,7 @@ library(classificationamazonregion4)
 #
 
 # Cube dates
-classification_years <- c(1996, 2021:2014)
+classification_years <- c(2022:2014, 1996)
 
 # Cube directory
 cube_base_dir <- get_cubes_dir()

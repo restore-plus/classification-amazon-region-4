@@ -11,10 +11,7 @@ library(classificationamazonregion4)
 #
 
 # Cube dates
-cube_years <- c(1996, 2021:2014)
-
-# Temporal composition
-cube_temporal_composition <- "P3M"
+cube_years <- c(2022:2014, 1996)
 
 # Bands
 cube_bands <- c("BLUE", "GREEN", "RED", "NIR08" , "SWIR16", "SWIR22", "CLOUD")
@@ -59,23 +56,45 @@ for (cube_year in cube_years) {
   print(paste0("Processing: ", cube_year))
 
   #
-  # 3.1. Define cube dates
+  # 4.1. Define cube dates
   #
   start_date <- paste0(cube_year, "-01-01")
   end_date   <- paste0(cube_year, "-12-31")
 
   #
-  # 3.2. Create a directory for the current year
+  # 4.2. Define regularization timeline (P3M)
+  #
+  regularization_timeline <- c(
+    paste0(cube_year, "-01-01"),
+    paste0(cube_year, "-04-01"),
+    paste0(cube_year, "-07-01"),
+    paste0(cube_year, "-10-01")
+  )
+
+  regularization_timeline <- as.Date(regularization_timeline)
+
+  #
+  # 4.3. Define platform
+  #
+  platform <- NULL
+
+  if (cube_year >= 2014) {
+    platform <- "LANDSAT-8"
+  }
+
+  #
+  # 4.4. Create a directory for the current year
   #
   cube_dir_year <- path(cube_base_dir) / cube_year
 
   fs::dir_create(cube_dir_year, recurse = TRUE)
 
   #
-  # 3.3. Load cube
+  # 4.5. Load cube
   #
   cube_year <- sits_cube(
     source     = "MPC",
+    platform   = platform,
     collection = "LANDSAT-C2-L2",
     roi        = region,
     start_date = start_date,
@@ -84,14 +103,15 @@ for (cube_year in cube_years) {
   )
 
   #
-  # 3.4. Regularize
+  # 4.6. Regularize
   #
   reg_cube <- sits_regularize(
     cube        = cube_year,
-    period      = cube_temporal_composition,
+    period      = "P3M",
     res         = 30,
     multicores  = multicores,
     output_dir  = cube_dir_year,
-    grid_system = "BDC_MD_V2"
+    grid_system = "BDC_MD_V2",
+    timeline    = regularization_timeline
   )
 }
