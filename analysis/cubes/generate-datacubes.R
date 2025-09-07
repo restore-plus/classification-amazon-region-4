@@ -29,7 +29,8 @@ memsize <- 220
 #
 eco_region_roi <- restoreutils::roi_ecoregions(
   region_id = 4,
-  crs = restoreutils::crs_bdc()
+  crs       = restoreutils::crs_bdc(),
+  as_convex = TRUE
 )
 
 
@@ -41,6 +42,9 @@ bdc_tiles <- sits_roi_to_tiles(
   crs = restoreutils::crs_bdc(),
   grid_system = "BDC_MD_V2"
 )
+
+bdc_tiles_bbox <- sf::st_union(bdc_tiles) |>
+  sf::st_bbox()
 
 
 #
@@ -90,7 +94,7 @@ for (regularization_year in regularization_years) {
     cube_year_reg <- sits_regularize(
       cube        = cube_year,
       period      = "P1M",
-      res         = 300,
+      res         = 30,
       multicores  = multicores,
       output_dir  = cube_year_dir,
       timeline    = cube_timeline
@@ -102,10 +106,10 @@ for (regularization_year in regularization_years) {
 
     # Generate indices
     cube_year_reg <- restoreutils::cube_generate_indices(
-      cube = cube_year_reg,
+      cube       = cube_year_reg,
       output_dir = cube_year_dir,
       multicores = multicores,
-      memsize = memsize
+      memsize    = memsize
     )
   })
 
