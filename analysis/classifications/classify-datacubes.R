@@ -19,7 +19,7 @@ model_version <- "random-forest-model_no-lbae"
 classification_version <- "samples-v2-eco4"
 
 # Classification - years
-regularization_years <- 2021:2019
+regularization_years <- 2015:2024
 
 # Hardware - Multicores
 multicores <- 60
