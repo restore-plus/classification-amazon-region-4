@@ -10,8 +10,8 @@ options(timeout = max(600, getOption("timeout")))
 #
 # General definitions
 #
-memsize    <- 200
-multicores <- 60
+memsize    <- 12
+multicores <- 14
 
 version <- "v2"
 
