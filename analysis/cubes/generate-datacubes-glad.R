@@ -15,10 +15,10 @@ cubes_dir <- restoreutils::project_cubes_dir()
 cube_bands <- c("BLUE", "GREEN", "RED", "NIR" , "SWIR1", "SWIR2")
 
 # Processing years
-regularization_years <- c(2000, 2005, 2007, 2010)
+regularization_years <- c(2002, 2010) # c(2000, 2002, 2005, 2007, 2010)
 
 # Hardware - Multicores
-multicores <- 8
+multicores <- 1
 
 # Hardware - Memory size
 memsize <- 200
@@ -64,6 +64,42 @@ for (regularization_year in regularization_years) {
   cube_start_date <- paste0(regularization_year, "-01-01")
   cube_end_date   <- paste0(regularization_year, "-12-31")
 
+  # Define year tiles
+  current_year_tiles <- bdc_tiles
+
+  # Loading existing cube
+  existing_cube <- tryCatch(
+      {
+        sits_cube(
+           source      = "OGH",
+           collection  = "LANDSAT-GLAD-2M",
+           data_dir    = cube_year_dir,
+           progress    = FALSE
+        )
+      },
+      error = function(e) {
+        return(NULL)
+      }
+  )
+
+  # Inform user about the current number of tiles
+  print(paste0('Total number of tiles: ', nrow(current_year_tiles)))
+
+  if (!is.null(existing_cube)) {
+    # Getting tiles
+    existing_tiles <- unique(existing_cube[["tile"]])
+
+    # Removing all existing tiles
+    current_year_tiles <- dplyr::filter(current_year_tiles, !(.data[["tile_id"]] %in% existing_tiles))
+
+    # Inform user
+    print(paste0('Existing tiles: ', length(existing_tiles)))
+  }
+
+  # Inform user about the current number of tiles to be processed 
+  # (some can be removed thanks to the existing data)
+  print(paste0('Tiles to process: ', nrow(current_year_tiles)))
+
   # Load cube
   cube_year <- sits_cube(
     source      = "OGH",
@@ -76,7 +112,7 @@ for (regularization_year in regularization_years) {
   )
 
   # Regularize tile by tile
-  purrr::map(bdc_tiles[["tile_id"]], function(tile) {
+  purrr::map(current_year_tiles[["tile_id"]], function(tile) {
     print(tile)
 
     if (nrow(cube_year) == 0) {
