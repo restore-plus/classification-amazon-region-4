@@ -13,19 +13,19 @@ base_cubes_dir <- restoreutils::project_cubes_dir()
 base_classifications_dir <- restoreutils::project_classifications_dir()
 
 # Model
-model_version <- "random-forest-model_no-lbae"
+model_version <- "random-forest-model_no-lbae_noperene"
 
 # Classification - version
-classification_version <- "samples-v2-eco4"
+classification_version <- "samples-v2-noperene-eco4"
 
 # Classification - years
-regularization_years <- 2015:2024
+regularization_years <- 2015:2019
 
 # Hardware - Multicores
-multicores <- 60
+multicores <- 80
 
 # Hardware - Memory size
-memsize    <- 200
+memsize    <- 320
 
 
 #
@@ -73,7 +73,7 @@ for (classification_year in regularization_years) {
     multicores  = multicores,
     memsize     = memsize,
     output_dir  = classification_dir,
-    roi         = eco_region_roi,
+    # roi         = eco_region_roi,
     progress    = TRUE,
     version     = classification_version
   )
