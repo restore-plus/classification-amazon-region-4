@@ -17,8 +17,11 @@ cube_bands <- c("BLUE", "GREEN", "RED", "NIR" , "SWIR1", "SWIR2")
 # Processing years
 regularization_years <- c(2002, 2010) # c(2000, 2002, 2005, 2007, 2010)
 
-# Hardware - Multicores
+# Hardware - Multicores (Download)
 multicores <- 1
+
+# Hardware - Multicores (Regularize0
+multicores_reg <- 30
 
 # Hardware - Memory size
 memsize <- 200
@@ -111,26 +114,33 @@ for (regularization_year in regularization_years) {
     bands       = cube_bands
   )
 
+  if (nrow(cube_year) == 0) {
+    return(NULL)
+  }
+
   # Regularize tile by tile
   purrr::map(current_year_tiles[["tile_id"]], function(tile) {
     print(tile)
 
-    if (nrow(cube_year) == 0) {
-      return(NULL)
-    }
-
     # Regularize
-    cube_year_reg <- sits_regularize(
-      cube        = cube_year,
-      period      = "P2M",
-      res         = 30,
-      tiles       = tile,
-      grid_system = "BDC_MD_V2",
-      multicores  = multicores,
-      output_dir  = cube_year_dir
+    cube_year_reg <- tryCatch(
+      {
+        sits_regularize(
+          cube        = cube_year,
+          period      = "P2M",
+          res         = 30,
+          tiles       = tile,
+          grid_system = "BDC_MD_V2",
+          multicores  = multicores,
+          output_dir  = cube_year_dir
+        )
+      },
+      error = function(e) {
+        return(NULL)
+      }
     )
 
-    if (nrow(cube_year_reg) == 0) {
+    if (is.null(cube_year_reg) || nrow(cube_year_reg) == 0) {
       return(NULL)
     }
 
@@ -138,7 +148,7 @@ for (regularization_year in regularization_years) {
     cube_year_reg <- restoreutils::cube_generate_indices_glad(
       cube = cube_year_reg,
       output_dir = cube_year_dir,
-      multicores = multicores,
+      multicores = multicores_reg,
       memsize = memsize
     )
   })
