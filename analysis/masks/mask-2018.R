@@ -22,7 +22,7 @@ mask_version <- "v2"
 classification_version <- "samples-v2-noperene-eco4"
 
 # Classification - years
-classification_year <- 2020
+classification_year <- 2018
 
 # Hardware - Multicores
 multicores <- 35
@@ -37,7 +37,6 @@ eco_region_roi <- restoreutils::roi_ecoregions(
   as_union   = TRUE,
   use_buffer = TRUE
 )
-
 
 #
 # 1. Define output directory
@@ -56,13 +55,13 @@ classification_dir <- (
 #
 
 # PRODES data
-prodes <- load_prodes_2020(multicores = multicores, memsize = memsize)
+prodes <- load_prodes_2018(multicores = multicores, memsize = memsize)
 
 # Terraclass 2022
 terraclass_2022 <- load_terraclass_2022(multicores = multicores, memsize = memsize)
 
 # Terraclass
-terraclass_2020 <- load_terraclass_2020(multicores = multicores, memsize = memsize)
+terraclass_2018 <- load_terraclass_2018(multicores = multicores, memsize = memsize)
 
 
 #
@@ -86,8 +85,7 @@ eco4_class <- sits_clean(
   multicores   = multicores,
   memsize      = memsize,
   output_dir   = output_dir,
-  version      = "mask-clean-step1",
-  progress     = TRUE
+  version      = "mask-clean-step1"
 )
 
 
@@ -129,7 +127,7 @@ eco4_mask <- restoreutils::reclassify_rule3_pasture_wetland(
 # Rule 4
 eco4_mask <- restoreutils::reclassify_rule4_silviculture(
   cube       = eco4_mask,
-  mask       = terraclass_2020,
+  mask       = terraclass_2018,
   multicores = multicores,
   memsize    = memsize,
   output_dir = output_dir,
@@ -139,7 +137,7 @@ eco4_mask <- restoreutils::reclassify_rule4_silviculture(
 # Rule 5
 eco4_mask <- restoreutils::reclassify_rule5_silviculture_pasture(
   cube       = eco4_mask,
-  mask       = terraclass_2020,
+  mask       = terraclass_2018,
   multicores = multicores,
   memsize    = memsize,
   output_dir = output_dir,
@@ -149,7 +147,7 @@ eco4_mask <- restoreutils::reclassify_rule5_silviculture_pasture(
 # Rule 6
 eco4_mask <- restoreutils::reclassify_rule6_semiperennial(
   cube       = eco4_mask,
-  mask       = terraclass_2020,
+  mask       = terraclass_2018,
   multicores = multicores,
   memsize    = memsize,
   output_dir = output_dir,
@@ -159,7 +157,7 @@ eco4_mask <- restoreutils::reclassify_rule6_semiperennial(
 # Rule 7
 eco4_mask <- restoreutils::reclassify_rule7_semiperennial_pasture(
   cube       = eco4_mask,
-  mask       = terraclass_2020,
+  mask       = terraclass_2018,
   multicores = multicores,
   memsize    = memsize,
   output_dir = output_dir,
@@ -169,7 +167,7 @@ eco4_mask <- restoreutils::reclassify_rule7_semiperennial_pasture(
 # Rule 8
 eco4_mask <- restoreutils::reclassify_rule8_annual_agriculture(
   cube       = eco4_mask,
-  mask       = terraclass_2020,
+  mask       = terraclass_2018,
   multicores = multicores,
   memsize    = memsize,
   output_dir = output_dir,
@@ -179,7 +177,7 @@ eco4_mask <- restoreutils::reclassify_rule8_annual_agriculture(
 # Rule 9
 eco4_mask <- restoreutils::reclassify_rule9_minning(
   cube       = eco4_mask,
-  mask       = terraclass_2020,
+  mask       = terraclass_2018,
   multicores = multicores,
   memsize    = memsize,
   output_dir = output_dir,
@@ -189,7 +187,7 @@ eco4_mask <- restoreutils::reclassify_rule9_minning(
 # Rule 10
 eco4_mask <- restoreutils::reclassify_rule10_urban_area(
   cube       = eco4_mask,
-  mask       = terraclass_2020,
+  mask       = terraclass_2018,
   multicores = multicores,
   memsize    = memsize,
   output_dir = output_dir,
@@ -199,7 +197,7 @@ eco4_mask <- restoreutils::reclassify_rule10_urban_area(
 # Rule 11
 eco4_mask <- restoreutils::reclassify_rule11_water(
   cube       = eco4_mask,
-  mask       = terraclass_2020,
+  mask       = terraclass_2018,
   multicores = multicores,
   memsize    = memsize,
   output_dir = output_dir,
@@ -224,6 +222,7 @@ eco4_mask <- sits_mosaic(
   output_dir = output_dir,
   version    = "mask-prodes-step14"
 )
+
 
 #
 # 6. Save cube object
