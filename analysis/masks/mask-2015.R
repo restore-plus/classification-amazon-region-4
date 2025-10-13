@@ -66,7 +66,6 @@ terraclass_2018 <- load_terraclass_2018(multicores = multicores, memsize = memsi
 # Terraclass 2014
 terraclass_2014 <- load_terraclass_2014(multicores = multicores, memsize = memsize)
 
-
 #
 # 3. Load classification
 #
@@ -229,16 +228,27 @@ eco4_mask <- restoreutils::reclassify_rule21_pasture_annual_agriculture(
 )
 
 # Rule 14
+eco4_mask <- restoreutils::reclassify_rule21_pasture_annual_agriculture(
+  cube           = eco4_mask,
+  mask           = terraclass_2014,
+  multicores     = multicores,
+  memsize        = memsize,
+  output_dir     = output_dir,
+  rarg_year      = classification_year,
+  version        = "step15"
+)
+
+# Rule 15
 eco4_mask <- restoreutils::reclassify_rule12_non_forest(
   cube       = eco4_mask,
   mask       = prodes,
   multicores = multicores,
   memsize    = memsize,
   output_dir = output_dir,
-  version    = "step15"
+  version    = "step16"
 )
 
-# Rule 15
+# Rule 16
 eco4_mask <- restoreutils::contextual_cleaner(
   cube         = eco4_mask,
   window_size  = 5L,
@@ -247,10 +257,10 @@ eco4_mask <- restoreutils::contextual_cleaner(
   multicores   = multicores,
   memsize      = memsize,
   output_dir   = output_dir,
-  version      = "step16"
+  version      = "step17"
 )
 
-# Rule 16
+# Rule 17
 eco4_mask <- restoreutils::reclassify_rule19_perene(
   cube       = eco4_mask,
   mask       = terraclass_2018,
@@ -258,19 +268,18 @@ eco4_mask <- restoreutils::reclassify_rule19_perene(
   memsize    = memsize,
   output_dir = output_dir,
   rarg_year  = classification_year,
-  version    = "step17"
+  version    = "step18"
 )
 
-# Rule 17
+# Rule 18
 eco4_mask <- restoreutils::reclassify_rule11_water(
   cube       = eco4_mask,
   mask       = terraclass_2014,
   multicores = multicores,
   memsize    = memsize,
   output_dir = output_dir,
-  version    = "step18"
+  version    = "step19"
 )
-
 # Crop
 eco4_mask <- sits_mosaic(
   cube       = eco4_mask,
@@ -278,7 +287,7 @@ eco4_mask <- sits_mosaic(
   roi        = eco_region_roi,
   multicores = multicores,
   output_dir = output_dir,
-  version    = "step19"
+  version    = "step20"
 )
 
 
