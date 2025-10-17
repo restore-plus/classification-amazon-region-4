@@ -16,7 +16,7 @@ base_classifications_dir <- restoreutils::project_classifications_dir()
 mask_tiles <- c()
 
 # Mask - version
-mask_version <- "v2"
+mask_version <- "test-perene-urban-area-v4"
 
 # Classification - version
 classification_version <- "samples-v2-noperene-eco4"
@@ -49,7 +49,6 @@ classification_dir <- (
   base_classifications_dir / classification_version / classification_year
 )
 
-
 #
 # 2. Load base masks
 #
@@ -57,14 +56,16 @@ classification_dir <- (
 # PRODES data
 prodes <- load_prodes_2022(multicores = multicores, memsize = memsize)
 
-# Terraclass 2022
+# Terraclass
 terraclass_2022 <- load_terraclass_2022(multicores = multicores, memsize = memsize)
 
+# Terraclass 2014
+terraclass_2014 <- load_terraclass_2014(multicores = multicores, memsize = memsize)
 
 #
 # 3. Load classification
 #
-eco4_class <- load_restore_map_bdc(
+eco_class <- load_restore_map_bdc(
   data_dir   = classification_dir,
   tiles      = "MOSAIC",
   multicores = multicores,
@@ -72,165 +73,222 @@ eco4_class <- load_restore_map_bdc(
   version    = classification_version
 )
 
+
 #
 # 4. Clean data to reduce noise
 #
-eco4_class <- sits_clean(
-  cube         = eco4_class,
+eco_class <- sits_clean(
+  cube         = eco_class,
   window_size  = 5,
   multicores   = multicores,
   memsize      = memsize,
   output_dir   = output_dir,
-  version      = "mask-clean-step1",
-  progress     = TRUE
+  version      = "step1"
 )
-
 
 #
 # 5. Apply reclassification rules
 #
-# Rule 1
-eco4_mask <- restoreutils::reclassify_rule1_secundary_vegetation(
-  cube       = eco4_class,
+eco_mask <- restoreutils::reclassify_rule1_secundary_vegetation(
+  cube       = eco_class,
   mask       = prodes,
   multicores = multicores,
   memsize    = memsize,
   output_dir = output_dir,
-  version    = "mask-prodes-step2"
+  version    = "step2"
 )
 
-# Rule 2
-eco4_mask <- restoreutils::reclassify_rule2_current_deforestation(
-  cube       = eco4_mask,
+eco_mask <- restoreutils::reclassify_rule0_forest(
+  cube       = eco_mask,
   mask       = prodes,
   multicores = multicores,
   memsize    = memsize,
   output_dir = output_dir,
-  version    = "mask-prodes-step3",
+  version    = "step3"
+)
+
+eco_mask <- restoreutils::reclassify_rule3_pasture_wetland(
+  cube       = eco_mask,
+  mask       = prodes,
+  multicores = multicores,
+  memsize    = memsize,
+  output_dir = output_dir,
+  version    = "step4",
   rarg_year  = classification_year # <- rule argument: Deforestation year
 )
 
-# Rule 3
-eco4_mask <- restoreutils::reclassify_rule3_pasture_wetland(
-  cube       = eco4_mask,
+eco_mask <- restoreutils::reclassify_rule4_silviculture(
+  cube       = eco_mask,
+  mask       = terraclass_2022,
+  multicores = multicores,
+  memsize    = memsize,
+  output_dir = output_dir,
+  version    = "step5"
+)
+
+eco_mask <- restoreutils::reclassify_rule5_silviculture_pasture(
+  cube       = eco_mask,
+  mask       = terraclass_2022,
+  multicores = multicores,
+  memsize    = memsize,
+  output_dir = output_dir,
+  version    = "step6"
+)
+
+eco_mask <- restoreutils::reclassify_rule6_semiperennial(
+  cube       = eco_mask,
+  mask       = terraclass_2022,
+  multicores = multicores,
+  memsize    = memsize,
+  output_dir = output_dir,
+  version    = "step7"
+)
+
+eco_mask <- restoreutils::reclassify_rule7_semiperennial_pasture(
+  cube       = eco_mask,
+  mask       = terraclass_2022,
+  multicores = multicores,
+  memsize    = memsize,
+  output_dir = output_dir,
+  version    = "step8"
+)
+
+eco_mask <- restoreutils::reclassify_rule8_annual_agriculture(
+  cube       = eco_mask,
+  mask       = terraclass_2022,
+  multicores = multicores,
+  memsize    = memsize,
+  output_dir = output_dir,
+  version    = "step9"
+)
+
+eco_mask <- restoreutils::reclassify_rule8_annual_agriculture_v2(
+  cube       = eco_mask,
+  mask       = terraclass_2022,
+  multicores = multicores,
+  memsize    = memsize,
+  output_dir = output_dir,
+  version    = "step10"
+)
+
+eco_mask <- restoreutils::reclassify_rule23_pasture_deforestation_in_nonforest(
+  cube       = eco_mask,
   mask       = prodes,
   multicores = multicores,
   memsize    = memsize,
   output_dir = output_dir,
-  version    = "mask-prodes-step4",
+  version    = "step11"
+)
+
+eco_mask <- restoreutils::reclassify_rule9_minning(
+  cube       = eco_mask,
+  mask       = terraclass_2022,
+  multicores = multicores,
+  memsize    = memsize,
+  output_dir = output_dir,
+  version    = "step12"
+)
+
+eco_mask <- restoreutils::reclassify_rule10_urban_area(
+  cube       = eco_mask,
+  mask       = terraclass_2022,
+  multicores = multicores,
+  memsize    = memsize,
+  output_dir = output_dir,
+  version    = "step13"
+)
+
+eco_mask <- restoreutils::reclassify_rule21_pasture_annual_agriculture(
+  cube           = eco_mask,
+  mask           = terraclass_2022,
+  multicores     = multicores,
+  memsize        = memsize,
+  output_dir     = output_dir,
+  rarg_year      = classification_year,
+  version        = "step14"
+)
+
+eco_mask <- restoreutils::reclassify_rule21_pasture_annual_agriculture(
+  cube           = eco_mask,
+  mask           = terraclass_2014,
+  multicores     = multicores,
+  memsize        = memsize,
+  output_dir     = output_dir,
+  rarg_year      = classification_year,
+  version        = "step15"
+)
+
+eco_mask <- restoreutils::reclassify_rule2_current_deforestation(
+  cube       = eco_mask,
+  mask       = prodes,
+  multicores = multicores,
+  memsize    = memsize,
+  output_dir = output_dir,
+  version    = "step16",
   rarg_year  = classification_year # <- rule argument: Deforestation year
 )
 
-# Rule 4
-eco4_mask <- restoreutils::reclassify_rule4_silviculture(
-  cube       = eco4_mask,
+eco_mask <- restoreutils::reclassify_rule12_non_forest(
+  cube       = eco_mask,
+  mask       = prodes,
+  multicores = multicores,
+  memsize    = memsize,
+  output_dir = output_dir,
+  version    = "step17"
+)
+
+eco_mask <- restoreutils::contextual_cleaner(
+  cube         = eco_mask,
+  window_size  = 15L,
+  target_class = as.numeric(names(sits_labels(eco_mask)[sits_labels(eco_mask) == "2ciclos"])),
+  mode_class   = as.numeric(names(sits_labels(eco_mask)[sits_labels(eco_mask) == "area_urbanizada"])),
+  multicores   = multicores,
+  memsize      = memsize,
+  output_dir   = output_dir,
+  version      = "step18"
+)
+
+eco_mask <- restoreutils::reclassify_rule11_water(
+  cube       = eco_mask,
   mask       = terraclass_2022,
   multicores = multicores,
   memsize    = memsize,
   output_dir = output_dir,
-  version    = "mask-prodes-step5"
+  version    = "step19"
 )
 
-# Rule 5
-eco4_mask <- restoreutils::reclassify_rule5_silviculture_pasture(
-  cube       = eco4_mask,
+eco_mask <- restoreutils::reclassify_rule19_perene(
+  cube       = eco_mask,
   mask       = terraclass_2022,
   multicores = multicores,
   memsize    = memsize,
   output_dir = output_dir,
-  version    = "mask-prodes-step6"
+  rarg_year  = classification_year,
+  version    = "step20"
 )
 
-# Rule 6
-eco4_mask <- restoreutils::reclassify_rule6_semiperennial(
-  cube       = eco4_mask,
-  mask       = terraclass_2022,
-  multicores = multicores,
-  memsize    = memsize,
-  output_dir = output_dir,
-  version    = "mask-prodes-step7"
-)
 
-# Rule 7
-eco4_mask <- restoreutils::reclassify_rule7_semiperennial_pasture(
-  cube       = eco4_mask,
-  mask       = terraclass_2022,
-  multicores = multicores,
-  memsize    = memsize,
-  output_dir = output_dir,
-  version    = "mask-prodes-step8"
-)
-
-# Rule 8
-eco4_mask <- restoreutils::reclassify_rule8_annual_agriculture(
-  cube       = eco4_mask,
-  mask       = terraclass_2022,
-  multicores = multicores,
-  memsize    = memsize,
-  output_dir = output_dir,
-  version    = "mask-prodes-step9"
-)
-
-# Rule 9
-eco4_mask <- restoreutils::reclassify_rule9_minning(
-  cube       = eco4_mask,
-  mask       = terraclass_2022,
-  multicores = multicores,
-  memsize    = memsize,
-  output_dir = output_dir,
-  version    = "mask-prodes-step10"
-)
-
-# Rule 10
-eco4_mask <- restoreutils::reclassify_rule10_urban_area(
-  cube       = eco4_mask,
-  mask       = terraclass_2022,
-  multicores = multicores,
-  memsize    = memsize,
-  output_dir = output_dir,
-  version    = "mask-prodes-step11"
-)
-
-# Rule 11
-eco4_mask <- restoreutils::reclassify_rule11_water(
-  cube       = eco4_mask,
-  mask       = terraclass_2022,
-  multicores = multicores,
-  memsize    = memsize,
-  output_dir = output_dir,
-  version    = "mask-prodes-step12"
-)
-
-# Rule 12
-eco4_mask <- restoreutils::reclassify_rule12_non_forest(
-  cube       = eco4_mask,
-  mask       = terraclass_2022,
-  multicores = multicores,
-  memsize    = memsize,
-  output_dir = output_dir,
-  version    = "mask-prodes-step13"
-)
-
-eco4_mask <- sits_mosaic(
-  cube       = eco4_mask,
+# Crop
+eco_mask <- sits_mosaic(
+  cube       = eco_mask,
   crs        = restoreutils::crs_bdc(),
   roi        = eco_region_roi,
   multicores = multicores,
   output_dir = output_dir,
-  version    = "mask-prodes-step14"
+  version    = "step21"
 )
 
 
 #
 # 6. Save cube object
 #
-saveRDS(eco4_mask, output_dir / "mask-cube.rds")
+saveRDS(eco_mask, output_dir / "mask-cube.rds")
 
 
 #
 # 7. COG data
 #
-sf::gdal_addo(eco4_mask[["file_info"]][[1]][["path"]])
+sf::gdal_addo(eco_mask[["file_info"]][[1]][["path"]])
 
 
 #
@@ -238,7 +296,7 @@ sf::gdal_addo(eco4_mask[["file_info"]][[1]][["path"]])
 #
 if (length(mask_tiles)) {
   cube_files <- crop_to_roi(
-    cube        = eco4_mask,
+    cube        = eco_mask,
     tiles       = mask_tiles,
     multicores  = multicores,
     output_dir  = output_dir,

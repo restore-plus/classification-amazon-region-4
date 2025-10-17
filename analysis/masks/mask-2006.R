@@ -22,7 +22,7 @@ mask_version <- "test-perene-urban-area-v4"
 classification_version <- "samples-v1-2010-eco4"
 
 # Classification - years
-classification_year <- 2007
+classification_year <- 2006
 
 # Hardware - Multicores
 multicores <- 35
@@ -54,7 +54,7 @@ classification_dir <- (
 #
 
 # PRODES data
-prodes <- load_prodes_2007(multicores = multicores, memsize = memsize)
+prodes <- load_prodes_2006(multicores = multicores, memsize = memsize)
 
 # Terraclass
 terraclass_2008 <- load_terraclass_2008(multicores = multicores, memsize = memsize)

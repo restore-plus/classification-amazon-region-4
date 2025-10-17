@@ -22,7 +22,7 @@ mask_version <- "test-perene-urban-area-v4"
 classification_version <- "samples-v1-2010-eco4"
 
 # Classification - years
-classification_year <- 2007
+classification_year <- 2001
 
 # Hardware - Multicores
 multicores <- 35
@@ -54,7 +54,10 @@ classification_dir <- (
 #
 
 # PRODES data
-prodes <- load_prodes_2007(multicores = multicores, memsize = memsize)
+prodes <- load_prodes_2001(multicores = multicores, memsize = memsize)
+
+# Terraclass
+terraclass_2004 <- load_terraclass_2004(multicores = multicores, memsize = memsize)
 
 # Terraclass
 terraclass_2008 <- load_terraclass_2008(multicores = multicores, memsize = memsize)
@@ -157,7 +160,7 @@ eco_mask <- restoreutils::reclassify_rule17_semiperennial_glad(
 
 eco_mask <- restoreutils::reclassify_rule18_annual_agriculture_glad(
   cube       = eco_mask,
-  mask       = terraclass_2008,
+  mask       = terraclass_2004,
   multicores = multicores,
   memsize    = memsize,
   output_dir = output_dir,
@@ -166,7 +169,7 @@ eco_mask <- restoreutils::reclassify_rule18_annual_agriculture_glad(
 
 eco_mask <- restoreutils::reclassify_rule8_annual_agriculture_v2(
   cube       = eco_mask,
-  mask       = terraclass_2008,
+  mask       = terraclass_2004,
   multicores = multicores,
   memsize    = memsize,
   output_dir = output_dir,
@@ -184,7 +187,7 @@ eco_mask <- restoreutils::reclassify_rule23_pasture_deforestation_in_nonforest(
 
 eco_mask <- restoreutils::reclassify_rule9_minning(
   cube       = eco_mask,
-  mask       = terraclass_2008,
+  mask       = terraclass_2004,
   multicores = multicores,
   memsize    = memsize,
   output_dir = output_dir,
