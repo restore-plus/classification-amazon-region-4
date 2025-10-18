@@ -16,7 +16,7 @@ base_classifications_dir <- restoreutils::project_classifications_dir()
 mask_tiles <- c()
 
 # Mask - version
-mask_version <- "test-perene-urban-area-v4"
+mask_version <- "rules-latest"
 
 # Classification - version
 classification_version <- "samples-v1-2010-eco4"
