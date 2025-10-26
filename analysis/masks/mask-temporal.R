@@ -12,10 +12,10 @@ base_masks_dir <- restoreutils::project_masks_dir()
 mask_version <- "rules-latest"
 
 # Hardware - Multicores
-multicores <- 35
+multicores <- 40
 
 # Hardware - Memory size
-memsize <- 100
+memsize <- 140
 
 #
 # 1. Generate directories
@@ -67,7 +67,7 @@ perene_version <- "temporal-mask-2"
 perene_label <- "Perene"
 
 # Apply perene rules
-perene_outfiles <- sapply(perene_mask_years, function(year) {
+perene_outfiles <- lapply(perene_mask_years, function(year) {
     # Define output dir
     perene_output_dir <- output_dir / perene_version / year
     
@@ -98,12 +98,12 @@ perene_outfiles <- sapply(perene_mask_years, function(year) {
         version              = perene_version,
         multicores           = multicores,
         memsize              = memsize,
-        output_dir           = output_dir
+        output_dir           = perene_output_dir
     )
 })
 
 # Update perene files
-files[files[["year"]] == perene_mask_years, "path"] <- perene_outfiles
+files[files[["year"]] %in% perene_mask_years, "path"] <- unlist(perene_outfiles)
 
 #
 # 5. Reclassify agriculture neighbor
@@ -130,7 +130,7 @@ file_brick <- restoreutils::reclassify_rule22_temporal_annual_agriculture(
 # Split raster brick in multiple files
 agri_files <- restoreutils::reclassify_temporal_results_to_maps(
     years = files[["year"]], 
-    output_dir = output_dir, 
+    output_dir = agri_output_dir, 
     file_brick = file_brick, 
     version = agri_version
 )
