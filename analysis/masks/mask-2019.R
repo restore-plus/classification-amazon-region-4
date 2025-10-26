@@ -10,33 +10,28 @@ processing_context <- "eco 4"
 
 # Local directories
 base_masks_dir <- restoreutils::project_masks_dir()
-base_classifications_dir <- restoreutils::project_classifications_dir()
+base_classifications_dir <- restoreutils::project_parallel44_classifications_dir()
 
 # Mask - tiles (works as a roi)
 mask_tiles <- c()
 
 # Mask - version
-mask_version <- "rules-latest"
+mask_version <- "rules-latest-parallel-44"
 
 # Classification - version
 classification_version <- "samples-v2-noperene-eco4"
+
+# Terraclass - version
+terraclass_version <- "tc-parallel-44"
 
 # Classification - years
 classification_year <- 2019
 
 # Hardware - Multicores
-multicores <- 35
+multicores <- 75
 
 # Hardware - Memory size
-memsize <- 100
-
-# ROI
-eco_region_roi <- restoreutils::roi_ecoregions(
-  region_id  = 4,
-  crs        = restoreutils::crs_bdc(),
-  as_union   = TRUE,
-  use_buffer = TRUE
-)
+memsize    <- 300
 
 #
 # 1. Define output directory
@@ -56,14 +51,14 @@ classification_dir <- (
 # PRODES data
 prodes <- load_prodes_2019(multicores = multicores, memsize = memsize)
 
-# Terraclass
-terraclass_2020 <- load_terraclass_2020(multicores = multicores, memsize = memsize)
+# Terraclass 2014
+terraclass_2014 <- load_terraclass_2014(version = terraclass_version, multicores = multicores, memsize = memsize)
 
 # Terraclass 2018
-terraclass_2018 <- load_terraclass_2018(multicores = multicores, memsize = memsize)
+terraclass_2018 <- load_terraclass_2018(version = terraclass_version, multicores = multicores, memsize = memsize)
 
-# Terraclass 2014
-terraclass_2014 <- load_terraclass_2014(multicores = multicores, memsize = memsize)
+# Terraclass 2020
+terraclass_2020 <- load_terraclass_2020(version = terraclass_version, multicores = multicores, memsize = memsize)
 
 #
 # 3. Load classification
@@ -269,28 +264,6 @@ eco_mask <- restoreutils::reclassify_rule19_perene(
   rarg_year  = classification_year,
   version    = "step20"
 )
-
-
-# Crop
-eco_mask <- sits_mosaic(
-  cube       = eco_mask,
-  crs        = restoreutils::crs_bdc(),
-  roi        = eco_region_roi,
-  multicores = multicores,
-  output_dir = output_dir,
-  version    = "step21"
-)
-
-# Generate stats
-cube_save_area_stats(
-  cube       = eco_mask,
-  multicores = multicores,
-  memsize    = memsize,
-  res        = 30,
-  output_dir = output_dir,
-  version    = "step21"
-)
-
 
 #
 # 6. Save cube object
