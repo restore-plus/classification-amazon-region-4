@@ -23,7 +23,7 @@ mask_version <- "rules-latest"
 temporal_version <- "temporal-mask-3"
 
 # Years
-years_to_apply <- 2000:2022
+years_to_apply <- 2018:2022
 
 # file template
 file_template <- "LANDSAT_OLI_MOSAIC_%d-01-01_%d-01-31_class_%s.tif"
@@ -77,6 +77,6 @@ cube <- restoreutils::cube_remap(
   cube = cube,
   output_dir = release_dir,
   multicores = multicores,
-    memsize = memsize,
+  memsize = memsize,
   rules = restoreutils::restore_mapping_release_table()
 )
