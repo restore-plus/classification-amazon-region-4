@@ -123,7 +123,7 @@ vs_pasture_outfiles <- lapply(vs_pasture_years, function(year) {
   vs_output_dir <- output_dir / vs_version / year
 
   # Filter years to apply
-  vs_pasture_files <- files[files[["year"]] %in% c(year - 1, year, year + 1),]
+  vs_pasture_files <- files[files[["year"]] %in% c(year - 1, year, year + 1), "path"][["path"]]
 
   # Filter current year
   year_file <- files[files[["year"]] == year, "path"][["path"]]
@@ -136,9 +136,11 @@ vs_pasture_outfiles <- lapply(vs_pasture_years, function(year) {
   class_value_before <- files[files[["year"]] == (year - 1), "labels"][[1]][[1]]
   class_value_after <- files[files[["year"]] == (year + 1), "labels"][[1]][[1]]
 
-  pasture_class_id <- c(
-    as.numeric(names(class_value_before[class_value_before %in% vs_pasture_names])),
-    as.numeric(names(class_value_after[class_value_after %in% vs_pasture_names]))
+  pasture_class_id <- list(
+    unique(c(
+      as.numeric(names(class_value_before[class_value_before %in% vs_pasture_names])),
+      as.numeric(names(class_value_after[class_value_after %in% vs_pasture_names]))
+    ))
   )
 
   # Apply rule perene trajectory rule
