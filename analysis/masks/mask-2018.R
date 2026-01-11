@@ -25,13 +25,13 @@ classification_version <- "samples-v2-noperene-eco4"
 classification_year <- 2018
 
 # Hardware - Multicores
-multicores <- 35
+multicores <- 100
 
 # Hardware - Memory size
-memsize <- 100
+memsize <- 300
 
 # ROI
-eco_region_roi <- restoreutils::roi_ecoregions(
+eco_region_roi <- restoreutils::roi_amazon_regions(
   region_id  = 4,
   crs        = restoreutils::crs_bdc(),
   as_union   = TRUE,
