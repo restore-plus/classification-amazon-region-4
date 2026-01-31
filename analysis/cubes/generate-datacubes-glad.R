@@ -15,7 +15,7 @@ cubes_dir <- restoreutils::project_cubes_dir()
 cube_bands <- c("BLUE", "GREEN", "RED", "NIR" , "SWIR1", "SWIR2")
 
 # Processing years
-regularization_years <- c(2002, 2010) # c(2000, 2002, 2005, 2007, 2010)
+regularization_years <- 2000:2014
 
 # Hardware - Multicores (Download)
 multicores <- 1
@@ -99,7 +99,7 @@ for (regularization_year in regularization_years) {
     print(paste0('Existing tiles: ', length(existing_tiles)))
   }
 
-  # Inform user about the current number of tiles to be processed 
+  # Inform user about the current number of tiles to be processed
   # (some can be removed thanks to the existing data)
   print(paste0('Tiles to process: ', nrow(current_year_tiles)))
 

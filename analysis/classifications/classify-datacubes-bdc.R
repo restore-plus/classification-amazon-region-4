@@ -13,19 +13,19 @@ base_cubes_dir <- restoreutils::project_cubes_dir()
 base_classifications_dir <- restoreutils::project_classifications_dir()
 
 # Model
-model_version <- "random-forest-model_no-lbae_noperene"
+model_version <- "rf-samples_amazon_landsat_2022"
 
 # Classification - version
-classification_version <- "samples-v2-noperene-eco4"
+classification_version <- "rf-samples_amazon_landsat_2022"
 
 # Classification - years
-regularization_years <- 2015:2019
+regularization_years <- 2015:2022
 
 # Hardware - Multicores
 multicores <- 80
 
 # Hardware - Memory size
-memsize    <- 320
+memsize <- 320
 
 
 #
@@ -105,4 +105,7 @@ for (classification_year in regularization_years) {
     output_dir = classification_dir,
     version    = classification_version
   )
+
+  # Save rds
+  saveRDS(mosaic_cube, classification_rds)
 }
